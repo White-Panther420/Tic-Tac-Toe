@@ -1,0 +1,116 @@
+body{
+    margin: 0;
+}
+
+.flex{
+    display: flex;
+}
+
+.grid{
+    display: grid;
+}
+
+.Content{
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    align-items: center;
+    background-color: #1a1a21;
+}
+
+/*Give our title that neon sign look*/
+h1 {
+    color: rgb(255, 255, 255);
+    text-shadow:
+        0 0 7px rgb(208, 8, 198),
+        0 0 10px rgb(233, 31, 193),
+        0 0 21px rgb(237, 26, 149),
+        0 0 42px rgb(221, 23, 116),
+        0 0 82px rgb(223, 41, 144),
+        0 0 92px rgb(225, 34, 146),
+        0 0 102px rgb(225, 66, 151),
+        0 0 151px rgb(227, 50, 189);
+    font-size: 64px;
+}
+
+.Tic {
+    color: rgb(255, 255, 255);
+    text-shadow:
+        0 0 7px rgb(24, 208, 67),
+        0 0 10px rgb(22, 232, 85),
+        0 0 21px rgb(15, 221, 128),
+        0 0 42px #0fa,
+        0 0 82px #0fa,
+        0 0 92px #0fa,
+        0 0 102px #0fa,
+        0 0 151px #0fa;
+    font-size: 64px;
+}
+
+.Tac{
+    color: #fff;
+    text-shadow:
+        0 0 7px rgb(27, 2, 255),
+        0 0 10px rgb(25, 1, 241),
+        0 0 21px rgb(34, 14, 218),
+        0 0 42px rgb(30, 15, 227),
+        0 0 82px rgb(36, 10, 233),
+        0 0 92px rgb(68, 54, 218),
+        0 0 75px rgb(81, 92, 244),
+        0 0 125px rgb(86, 50, 227);
+    font-size: 64px;
+}
+
+.Toe{
+    color: #fff;
+    text-shadow:
+    0 0 7px rgb(238, 46, 46),
+    0 0 10px rgb(235, 25, 25),
+    0 0 21px rgb(204, 23, 23),
+    0 0 42px rgb(213, 16, 16),
+    0 0 82px rgb(221, 24, 24),
+    0 0 92px rgb(234, 29, 29),
+    0 0 102px rgb(234, 25, 25),
+    0 0 151px rgb(233, 21, 21);
+    font-size: 64px;
+}
+
+.PlayerOptions{
+    width: 50%;
+    justify-content: space-between;
+}
+
+.vsPlayer,
+.VsAI{
+    width: 50px;
+    height: 30px;
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    color: #fff;
+    font-size: 28px;
+    text-align: center;
+}
+
+.vsPlayer{
+    text-shadow:
+    0 0 7px rgb(24, 208, 67),
+    0 0 10px rgb(22, 232, 85),
+    0 0 21px rgb(15, 221, 128),
+    0 0 42px #0fa,
+    0 0 82px #0fa,
+    0 0 92px #0fa,
+    0 0 102px #0fa,
+    0 0 151px #0fa;
+}
+
+.VsAI{
+    text-shadow:
+        0 0 7px rgb(238, 46, 46),
+        0 0 10px rgb(235, 25, 25),
+        0 0 21px rgb(204, 23, 23),
+        0 0 42px rgb(213, 16, 16),
+        0 0 82px rgb(221, 24, 24),
+        0 0 92px rgb(234, 29, 29),
+        0 0 102px rgb(234, 25, 25),
+        0 0 151px rgb(233, 21, 21);
+}
