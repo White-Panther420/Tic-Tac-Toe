@@ -151,7 +151,7 @@ h1 {
     font-family: "NeonFont";
     text-align: center;
     margin-top: 60px;
-    margin-bottom: 40px;
+    margin-bottom: 60px;
     text-shadow:
         0 0 7px rgb(24, 208, 67),
         0 0 10px rgb(22, 232, 85),
@@ -176,3 +176,19 @@ h1 {
         0 0 151px #0fa;
 }
 
+.Footer{
+    background-color: black;
+    color: white;
+    text-shadow:
+    0 0 7px rgb(153, 102, 204),
+    0 0 10px rgb(154, 92, 216),
+    0 0 21px rgb(138, 71, 205),
+    0 0 42px rgb(132, 54, 210),
+    0 0 82px rgb(123, 39, 208),
+    0 0 92px rgb(117, 34, 200),
+    0 0 102px rgb(121, 36, 206),
+    0 0 151px rgb(110, 18, 201);
+    font-size: 16px;
+    height: 35px;
+    justify-content: center;
+}
