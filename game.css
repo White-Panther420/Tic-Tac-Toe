@@ -1,0 +1,178 @@
+@font-face
+{
+    font-family: "NeonFont";
+    src: url(./Fonts/Flottflott.ttf);
+}
+
+body
+{
+    margin: 0;
+    font-family: "NeonFont";
+}
+
+.flex{
+    display: flex;
+}
+
+.grid{
+    display: grid;
+}
+
+.Content{
+    flex-direction: column;
+    min-height: 100vh;
+    min-width: 100vw;
+    align-items: center;
+    text-align: center;
+    background-color: #000000;
+}
+
+/*Give our title that neon sign look*/
+h1 {
+    color: rgb(255, 255, 255);
+    text-align: center;
+    text-shadow:
+        0 0 7px rgb(27, 2, 255),
+        0 0 10px rgb(25, 1, 241),
+        0 0 21px rgb(34, 14, 218),
+        0 0 42px rgb(30, 15, 227),
+        0 0 82px rgb(36, 10, 233),
+        0 0 92px rgb(68, 54, 218),
+        0 0 75px rgb(81, 92, 244),
+        0 0 125px rgb(86, 50, 227);
+    font-size: 96px;
+}
+
+.GUI{
+    width: clamp(50%, 60%, 70%);
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+    margin-top: -50px;
+}
+
+.LeftGUI,
+.RightGUI{
+    width: 250px;
+    height: 250px;
+}
+
+.LeftGUI{
+    margin-right: auto; /*Prevents rightGUI from centering when not wrapped on the next line*/
+}
+
+.Icon{
+    width: 125px;
+    height: 125px;
+}
+
+.Player{
+    border:rgb(255, 255, 255) 2px solid;
+    box-shadow:
+        0 0 7px rgb(27, 2, 255),
+        0 0 10px rgb(25, 1, 241),
+        0 0 21px rgb(34, 14, 218);
+
+}
+
+.Robot{
+    border: rgb(255, 255, 255) 2px solid;
+    box-shadow: 
+        0 0 7px rgb(238, 46, 46),
+        0 0 10px rgb(235, 25, 25),
+        0 0 21px rgb(204, 23, 23);
+}
+
+.leftName,
+.LeftScore{
+    color: white;
+    text-shadow:
+        0 0 7px rgb(27, 2, 255),
+        0 0 10px rgb(25, 1, 241),
+        0 0 21px rgb(34, 14, 218),
+        0 0 42px rgb(30, 15, 227),
+        0 0 82px rgb(36, 10, 233),
+        0 0 92px rgb(68, 54, 218),
+        0 0 75px rgb(81, 92, 244),
+        0 0 125px rgb(86, 50, 227);
+    font-size: 28px;
+}
+
+.RightName,
+.RightScore{
+    color: white;
+    text-shadow:
+        0 0 7px rgb(238, 46, 46),
+        0 0 10px rgb(235, 25, 25),
+        0 0 21px rgb(204, 23, 23),
+        0 0 42px rgb(213, 16, 16),
+        0 0 82px rgb(221, 24, 24),
+        0 0 92px rgb(234, 29, 29),
+        0 0 102px rgb(234, 25, 25),
+        0 0 151px rgb(233, 21, 21);
+    font-size: 28px;
+}
+
+.GameBoard{
+    gap: 12px;
+    width: 500px;
+    height: 500px;
+    align-items: center;
+    justify-items: center;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    margin-top: 30px;
+    background-image: url(./Assets/gameboard.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 107% 107%;
+}
+
+.Square{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 38px;
+    color: rgb(255, 255, 255);
+    text-shadow: 
+        0 0 0 rgb(238, 46, 46),
+        0 0 0 rgb(235, 25, 25),
+        0 0 0 rgb(204, 23, 23);
+}
+
+.Restart{
+    width: 160px;
+    height: 40px;
+    background-color: black;
+    border: white 2px solid;
+    color: #fff;
+    border: none;
+    font-size: 28px;
+    font-family: "NeonFont";
+    text-align: center;
+    margin-top: 60px;
+    margin-bottom: 40px;
+    text-shadow:
+        0 0 7px rgb(24, 208, 67),
+        0 0 10px rgb(22, 232, 85),
+        0 0 21px rgb(15, 221, 128),
+        0 0 42px #0fa,
+        0 0 82px #0fa,
+        0 0 92px #0fa,
+        0 0 102px #0fa,
+        0 0 151px #0fa;
+}
+
+.Restart:hover{
+    border: #fff 2px solid;
+    box-shadow:
+        0 0 7px rgb(24, 208, 67),
+        0 0 10px rgb(22, 232, 85),
+        0 0 21px rgb(15, 221, 128),
+        0 0 42px #0fa,
+        0 0 82px #0fa,
+        0 0 92px #0fa,
+        0 0 102px #0fa,
+        0 0 151px #0fa;
+}
+
