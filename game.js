@@ -19,7 +19,19 @@ AIBtn.addEventListener("click", ()=>{
 
 const Gameboard = (() =>{
     let gameboad = [X, X, 0, X, X, X, O, O, X]
-    
 })()
+
+const Player = (score) =>{
+    const getScore = () => score
+    const winGame = (score) => {
+        if(score >= 3){
+            return true;
+        }
+    };
+    const winRound = () => {
+        
+    };
+    return {score}
+}
 
 
