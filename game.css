@@ -41,7 +41,7 @@ h1 {
         0 0 92px rgb(68, 54, 218),
         0 0 75px rgb(81, 92, 244),
         0 0 125px rgb(86, 50, 227);
-    font-size: 96px;
+    font-size: 80px;
 }
 
 .GUI{
@@ -54,8 +54,8 @@ h1 {
 
 .LeftGUI,
 .RightGUI{
-    width: 250px;
-    height: 250px;
+    width: 200px;
+    height: 200px;
 }
 
 .LeftGUI{
@@ -71,8 +71,8 @@ h1 {
 }
 
 .Icon{
-    width: 125px;
-    height: 125px;
+    width: 100px;
+    height: 100px;
 }
 
 .Player{
@@ -112,7 +112,7 @@ h1 {
         0 0 92px rgb(68, 54, 218),
         0 0 75px rgb(81, 92, 244),
         0 0 125px rgb(86, 50, 227);
-    font-size: 28px;
+    font-size: 22px;
 }
 
 /*For AI*/
@@ -128,7 +128,7 @@ h1 {
         0 0 92px rgb(234, 29, 29),
         0 0 102px rgb(234, 25, 25),
         0 0 151px rgb(233, 21, 21);
-    font-size: 28px;
+    font-size: 22px;
 }
 
 /*For player 2*/
@@ -144,18 +144,18 @@ h1 {
         0 0 92px #0fa,
         0 0 102px #0fa,
         0 0 151px #0fa;
-    font-size: 28px;
+    font-size: 22px;
 }
 
 .GameBoard{
     gap: 12px;
-    width: 500px;
-    height: 500px;
+    width: 450px;
+    height: 460px;
     align-items: center;
     justify-items: center;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    margin-top: 30px;
+    margin-top: 15px;
     background-image: url(./Assets/gameboard.png);
     background-position: center;
     background-repeat: no-repeat;
