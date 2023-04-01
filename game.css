@@ -247,3 +247,7 @@ h1 {
         0 0 10px rgb(22, 232, 85),
         0 0 21px rgb(15, 221, 128);
 }
+
+.winMsg{
+    color: green;
+}

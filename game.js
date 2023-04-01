@@ -1,14 +1,19 @@
+const GUI = document.querySelector(".GUI")
 const AIGUI = document.querySelector(".RightGUI")
 const Player2GUI = document.querySelector(".RightGUIPlayer2")
 const StartScreenContent = document.querySelector(".StartScreenContent")
 const gameContent = document.querySelector(".GameContent")
 const gameBoardDiv = document.querySelector(".GameBoard")
-let opponentSelection = " ";
+const player1Score = document.querySelector(".LeftScore");
+const player2Score = document.querySelector(".Player2Score");
+const AIScore = document.querySelector(".RightScore")
+const restartBtn = document.querySelector(".Restart")
+let AISelection = false; //Used to identify the correct right-side GUI
+let win = false;  //Used to stop user from clicking on squares
 /******************************Start Screen******************************/
 const Player2Btn = document.querySelector(".vsPlayer")
 Player2Btn.addEventListener("click", ()=>{
-    opponentSelection = "Player 2";
-    console.log("AN OP SEL: " + opponentSelection);
+    AISelection = false;
     StartScreenContent.style.display = "none"
     gameContent.style.display = "flex"
     Player2GUI.style.display = "block"
@@ -16,7 +21,7 @@ Player2Btn.addEventListener("click", ()=>{
 
 const AIBtn = document.querySelector(".VsAI")
 AIBtn.addEventListener("click", ()=>{
-    opponentSelection = "AI"
+    AISelection = true;
     StartScreenContent.style.display = "none"
     gameContent.style.display = "flex"
     AIGUI.style.display = "block"
@@ -27,15 +32,17 @@ AIBtn.addEventListener("click", ()=>{
 const gameBoard = (() => {
     const board = [] // [['X', 'O', 'X'], ['X', 'O', 'X'], ['X', 'O', 'X']];
     //Creating a 3x3 board
-    for(let i=0; i<3; i++){
-        board[i] = [];
-        for(let j=0; j<3; j++){
-            board[i][j] = "";
+    const createNewBoard =  () => {
+        for(let i=0; i<3; i++){
+            board[i] = [];
+            for(let j=0; j<3; j++){
+                board[i][j] = "";
+            }
         }
-    }
-    console.log("NEW BOARD: " << board)
+        return board;
+    };
     const getBoard = () => board; 
-    return{getBoard};
+    return{getBoard, createNewBoard};
 })();
 
 const Player = (name) => {
@@ -49,14 +56,15 @@ const Player = (name) => {
         }
     }
     let score = 0;
-    return{name, token}
+    const updateScore = () =>{
+        return ++score;
+    }
+    return{name, token, updateScore}
 };
 
 const gameController = (() => {
-    const board = gameBoard.getBoard();
+    const board = gameBoard.createNewBoard();
     const players = [Player("Player 1"), Player("Player 2")];
-    let win = false;
-    let score = 0;
     let currentTurn = 0;
     let movesCount = 0;
     let activeTurn = (currentTurn) =>{
@@ -70,39 +78,32 @@ const gameController = (() => {
         let squarePosition = square.getAttribute("data-state")
         let row = Math.floor(squarePosition/3)+1;
         let col = (squarePosition%3) + 1;
-        square.textContent = players[currentTurn].token();
-        console.log(`MY ROW: ${row-1}, MY COL: ${col-1}`)
-        board[col-1][row-1] = players[currentTurn].token(); //Update game board
+        let token = players[currentTurn].token();
+        square.textContent = token
+        board[col-1][row-1] = token //Update game board
         
-        if(wonRound(board, row, col, players[currentTurn].token())){
-            if(activeTurn === 0){
-
-            }
+        if(wonRound(board, row, col, token)){
+            displayGame.updateScoreGUI(token, players[currentTurn].updateScore())
+            displayGame.printWinMsg(token)
             win = true
-            score++;
-            console.log("SCORE! " + score);
         }
-        if(movesCount === 9){
-            console.log("DRAW!")
-            return;
-        }
+        // if(movesCount === 9){
+        //     console.log("DRAW!")
+        //     return;
+        // }
         currentTurn = activeTurn(currentTurn);  //Switch turn
         movesCount++;
     }
     const wonRound = (board, row, col, token) => {
-        console.log("MADE IT HERE");
-        console.log(`ROW: ${row}, COL: ${col}`)
         //checking for horizontal win
         for(let i=0; i<3; i++){
             if(board[i][row-1] !== token){
                 break; //We don't have three of the same tokens in a row
             }
             if(i === 2){
-                console.log("YAY!! YOU WON HORIZONTALLY!!");
                 console.log(board)
                 return true;
             }
-            console.log("ARRAY CINTENT: " + board[row-1][i])
         }
         //Checking for vertical win
         for(let j=0; j<3; j++){
@@ -110,7 +111,6 @@ const gameController = (() => {
                 break; //We don't have three of the same tokens in a row
             }
             if(j === 2){
-                console.log("YAY!! YOU WON VERTICALLY!!");
                 console.log(board)
                 return true;
             }
@@ -122,7 +122,6 @@ const gameController = (() => {
                     break; //We don't have three of the same tokens in a row
                 }
                 if(i === 2){
-                    console.log("YAY!! YOU WON DIAGONALLY!!");
                     console.log(board)
                     return true;
                 }
@@ -130,72 +129,34 @@ const gameController = (() => {
         }
 
         if((row-1) + (col-1) === 2){
-            console.log("WE HERE!")
             for(let i=0; i<3; i++){
-                console.log("AHHSD")
                 if(board[i][(3-1)-i] !== token){
                     break; //We don't have three of the same tokens in a row
                 }
                 if(i === 2){
-                    console.log("YAY!! YOU WON REVERSE DIAGONALLY!!");
-                    console.log(board)
                     return true;
                 }
             }
         }
-        console.log(board)
-
-
-        // switch(squarePosition+1){
-        //     case 1:
-                
-        //         if(board[0] === token && board[1] === token && board[2] === token){
-        //             console.log("WON: " + squarePosition)
-        //             return true;
-        //         }
-        //     case 2:
-        //         console.log("WON: " + squarePosition)
-        //         return true;
-        //     case 3:
-        //         console.log("WON: " + squarePosition)
-        //         return true;
-        //     case 4:
-        //         console.log("WON: " + squarePosition)
-        //         return true;
-        //     case 5:
-        //         console.log("WON: " + squarePosition)
-        //         return true;
-        //     case 6:
-        //         console.log("WON: " + squarePosition)
-        //         return true;
-        //     case 7:
-        //         console.log("WON: " + squarePosition)
-        //         return true;
-        //     case 8:
-        //         console.log("WON: " + squarePosition)
-        //         return true;
-        //     case 9:
-        //         console.log("WON: " + squarePosition)
-        //         return true;
-        //     default:
-        //         console.log("STILL IN THE GANE")
-        //         return false;
-        // }
     }
-
     return{playRound};
 })();
 
 const displayGame = (() => {
-    const displayGUI = () =>{
+    const displayBoard = () =>{
         for(let i=0; i<9; i++){
             let square = document.createElement("div");
             square.classList.add("Square");
             square.setAttribute("style", "background-color: black; color: white; border: none; width:100px; height:100px;");
             square.setAttribute("data-state", i)
             gameBoardDiv.appendChild(square);
-            square.addEventListener("click", () =>{
-                if(square.textContent !== ""){
+            square.addEventListener("click", func)
+            function func(){
+                if(win || (win && square.textContent !== "")){
+                    //Prevent user from clicking on any square once game is over
+                    square.removeEventListener("click", func)
+                }
+                else if(square.textContent !== ""){
                     //Flash red, illegal move
                     square.setAttribute("style", "background-color: red; color: white; border: none; width:100px; height:100px;");
                     console.log("ILLEGAL MOVE");
@@ -203,11 +164,48 @@ const displayGame = (() => {
                 else{
                     gameController.playRound(square)
                 }
-            });
+            }
+        }
+        restartBtn.addEventListener("click", () =>{
+            restartGame();
+        })
+    }
+    const updateScoreGUI = (token, score) =>{
+        if(token === 'X'){
+            player1Score.textContent = score;
+        }
+        else{
+            player2Score.textContent = score
         }
     }
-    return{displayGUI}
+
+    const printWinMsg = (token) =>{
+        let playerName;
+        const winMsg = document.createElement("p");
+        if(token === 'O' && !AISelection){
+            playerName = "Player 2";
+            GUI.insertBefore(winMsg, Player2GUI)
+        }
+        else if(token === 'O' && AISelection){
+            playerName = "AU"
+            GUI.insertBefore(winMsg, AIGUI)
+        }
+        else{
+            playerName = "Player 1"
+            GUI.insertBefore(winMsg, Player2GUI)
+        }
+        winMsg.textContent = `${playerName} has won the round!`
+        winMsg.classList.add("winMsg")
+    }
+
+    const restartGame = () =>{
+        gameBoardDiv.textContent = "";
+        win = false;
+        gameBoard.createNewBoard();
+        displayBoard();
+    }
+    return{displayBoard, updateScoreGUI, printWinMsg}
 })();
 
-displayGame.displayGUI();
+displayGame.displayBoard();
 
