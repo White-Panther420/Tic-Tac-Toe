@@ -64,7 +64,14 @@ const Player = (name) => {
 
 const gameController = (() => {
     const board = gameBoard.createNewBoard();
-    const players = [Player("Player 1"), Player("Player 2")];
+    let playerName;
+    if(AISelection){
+        playerName = "Player 2"
+    }
+    else{
+        playerName = "AI"
+    }
+    const players = [Player("Player 1"), Player(playerName)];
     let currentTurn = 0;
     let movesCount = 0;
     let activeTurn = (currentTurn) =>{
@@ -79,6 +86,16 @@ const gameController = (() => {
         let row = Math.floor(squarePosition/3)+1;
         let col = (squarePosition%3) + 1;
         let token = players[currentTurn].token();
+        if(token === "X"){
+            square.classList.add("Player1X")
+        }
+        else if(AISelection){
+            square.classList.add("AIO")
+        }
+        else{
+            square.classList.add("Player2O")
+        }
+        //Add class to square based on token
         square.textContent = token
         board[col-1][row-1] = token //Update game board
         
@@ -143,11 +160,14 @@ const gameController = (() => {
 })();
 
 const displayGame = (() => {
+    restartBtn.addEventListener("click", () =>{
+        restartGame();
+    })
     const displayBoard = () =>{
         for(let i=0; i<9; i++){
             let square = document.createElement("div");
             square.classList.add("Square");
-            square.setAttribute("style", "background-color: black; color: white; border: none; width:100px; height:100px;");
+            square.setAttribute("style", "background-color: black; border: none; width:100px; height:100px;");
             square.setAttribute("data-state", i)
             gameBoardDiv.appendChild(square);
             square.addEventListener("click", func)
@@ -166,16 +186,16 @@ const displayGame = (() => {
                 }
             }
         }
-        restartBtn.addEventListener("click", () =>{
-            restartGame();
-        })
     }
     const updateScoreGUI = (token, score) =>{
         if(token === 'X'){
             player1Score.textContent = score;
         }
+        else if(AISelection){
+            AIScore.textContent = score
+        }
         else{
-            player2Score.textContent = score
+            player2Score.textContent = score;
         }
     }
 
@@ -192,7 +212,10 @@ const displayGame = (() => {
         }
         else{
             playerName = "Player 1"
-            GUI.insertBefore(winMsg, Player2GUI)
+            if(AISelection)
+                GUI.insertBefore(winMsg, AIGUI)
+            else
+                GUI.insertBefore(winMsg, Player2GUI)
         }
         winMsg.textContent = `${playerName} has won the round!`
         winMsg.classList.add("winMsg")
@@ -200,6 +223,8 @@ const displayGame = (() => {
 
     const restartGame = () =>{
         gameBoardDiv.textContent = "";
+        const winMsgElement = document.querySelector(".winMsg")
+        winMsgElement.remove();
         win = false;
         gameBoard.createNewBoard();
         displayBoard();
