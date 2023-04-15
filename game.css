@@ -68,6 +68,10 @@ h1 {
     display: none;
 }
 
+.win_p{
+    display: none;
+}
+
 .Icon{
     width: 100px;
     height: 100px;

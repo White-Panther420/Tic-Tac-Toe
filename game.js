@@ -86,6 +86,8 @@ const gameController = (() => {
         let row = Math.floor(squarePosition/3)+1;
         let col = (squarePosition%3) + 1;
         let token = players[currentTurn].token();
+        
+        //Add class to square based on token
         if(token === "X"){
             square.classList.add("Player1X")
         }
@@ -95,13 +97,17 @@ const gameController = (() => {
         else{
             square.classList.add("Player2O")
         }
-        //Add class to square based on token
         square.textContent = token
         board[col-1][row-1] = token //Update game board
         
         if(wonRound(board, row, col, token)){
-            displayGame.updateScoreGUI(token, players[currentTurn].updateScore())
-            displayGame.printWinMsg(token)
+            let currPlayerScore = players[currentTurn].updateScore()
+            displayGame.updateScoreGUI(token, currPlayerScore)
+            if(currPlayerScore === 5){
+                //End game
+            }
+            else
+                displayGame.printWinMsg(token)
             win = true
         }
         // if(movesCount === 9){
@@ -201,7 +207,7 @@ const displayGame = (() => {
 
     const printWinMsg = (token) =>{
         let playerName;
-        const winMsg = document.createElement("p");
+        const winMsg = document.querySelector(".win_p");
         if(token === 'O' && !AISelection){
             playerName = "Player 2";
             GUI.insertBefore(winMsg, Player2GUI)
@@ -223,8 +229,8 @@ const displayGame = (() => {
 
     const restartGame = () =>{
         gameBoardDiv.textContent = "";
-        const winMsgElement = document.querySelector(".winMsg")
-        winMsgElement.remove();
+        const winMsgElement = document.querySelector(".win_p")
+        winMsgElement.classList.remove("winMsg")
         win = false;
         gameBoard.createNewBoard();
         displayBoard();
