@@ -88,9 +88,9 @@ const gameController = (() => {
 
     let activeTurn = (currentTurn) =>{
         if(currentTurn === 0)
-            return 1; //Player 1 turn
-        else    
-            return 0; //Player 2 / AI turn
+            return 1; //Player 2 / AI turn
+        else
+            return 0; //Player 1 turn
     };
 
     const playTurn = (square) => {
@@ -134,6 +134,9 @@ const gameController = (() => {
         }
         currentTurn = activeTurn(currentTurn);  //Switch turn
         movesCount++;
+        if(currentTurn === 1 && AISelection){
+            displayGame.AIMove()
+        }
     }
     const wonRound = (board, row, col, token) => {
         //checking for horizontal win
@@ -306,13 +309,28 @@ const displayGame = (() => {
         winRound = false;
         gameBoard.createNewBoard();
         displayBoard();
-        console.log("HIIIII")
     }
 
     const removeRestartOption = () =>{
         restartBtn.style.display = "none"
     }
-    return{displayBoard, updateScoreGUI, printWinMsg, printDrawMSG, removeRestartOption}
+
+    const AIMove = ()=>{
+        const boardForAI = document.querySelectorAll(".Square");
+        let legalMove = false
+        let movePosition; 
+        while(!legalMove){
+            movePosition = Math.floor(Math.random() * 8);   
+            if(boardForAI[movePosition].textContent === ""){
+                legalMove = true
+            }
+        }
+        
+        console.log("AI MOVE: " + movePosition)
+        boardForAI[movePosition].click();
+    }
+
+    return{displayBoard, updateScoreGUI, printWinMsg, printDrawMSG, removeRestartOption, AIMove}
 })();
 
 
