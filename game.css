@@ -68,7 +68,8 @@ h1 {
     display: none;
 }
 
-.win_p{
+.win_p,
+.draw_p{
     display: none;
 }
 
@@ -171,11 +172,17 @@ h1 {
     font-size: 38px;
 }
 
-.Restart{
+.buttons{
+    justify-content: center;
+    align-items: center;
+    width: 40%
+}
+
+.Restart,
+.QuitBtn{
     width: 160px;
     height: 40px;
     background-color: black;
-    border: white 2px solid;
     color: #fff;
     border: none;
     font-size: 28px;
@@ -183,6 +190,10 @@ h1 {
     text-align: center;
     margin-top: 60px;
     margin-bottom: 60px;
+}
+.Restart{
+    margin-right: auto;
+    margin-left: auto;
     text-shadow:
         0 0 7px rgb(24, 208, 67),
         0 0 10px rgb(22, 232, 85),
@@ -205,6 +216,33 @@ h1 {
         0 0 92px #0fa,
         0 0 102px #0fa,
         0 0 151px #0fa;
+}
+
+.QuitBtn{
+    margin-left: auto;
+    margin-right: auto;
+    text-shadow:
+        0 0 7px rgb(238, 46, 46),
+        0 0 10px rgb(235, 25, 25),
+        0 0 21px rgb(204, 23, 23),
+        0 0 42px rgb(213, 16, 16),
+        0 0 82px rgb(221, 24, 24),
+        0 0 92px rgb(234, 29, 29),
+        0 0 102px rgb(234, 25, 25),
+        0 0 151px rgb(233, 21, 21);
+}
+
+.QuitBtn:hover{
+    border: #fff 2px solid;
+    box-shadow: 
+        0 0 7px rgb(238, 46, 46),
+        0 0 10px rgb(235, 25, 25),
+        0 0 21px rgb(204, 23, 23),
+        0 0 42px rgb(213, 16, 16),
+        0 0 82px rgb(221, 24, 24),
+        0 0 92px rgb(234, 29, 29),
+        0 0 102px rgb(234, 25, 25),
+        0 0 151px rgb(233, 21, 21);
 }
 
 .Footer{
@@ -265,7 +303,8 @@ h1 {
     0 0 151px #0fa;
 }
 
-.winMsg{
+.winMsg,
+.drawMsg{
     color: green;
     display: flex;
     justify-self: center;
