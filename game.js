@@ -14,6 +14,7 @@ let AISelection = false; //Used to identify the correct right-side GUI
 let winRound = false;  //Used to stop user from clicking on squares
 let winGame = false;
 let quitGame = false;
+let currentTurn = 0;  //Will keep track of turn
 /******************************Start Screen******************************/
 const Player2Btn = document.querySelector(".vsPlayer")
 Player2Btn.addEventListener("click", ()=>{
@@ -33,6 +34,9 @@ AIBtn.addEventListener("click", ()=>{
     gameContent.style.display = "flex"
     AIGUI.style.display = "block"
     displayGame.displayBoard();
+    if(currentTurn === 1){
+        displayGame.AIMove()
+    }
 })
 /******************************Start Screen******************************/
 
@@ -83,7 +87,6 @@ const gameController = (() => {
         playerName = "AI"
     }
     const players = [Player("Player 1"), Player(playerName)];
-    let currentTurn = 0;
     let movesCount = 1;
 
     let activeTurn = (currentTurn) =>{
@@ -125,11 +128,13 @@ const gameController = (() => {
             if(winGame){
                 displayGame.removeRestartOption()
             }
+            currentTurn = activeTurn(currentTurn);  //Switch turn
             return;
         }
         if(movesCount === 9){
             displayGame.printDrawMSG()
             movesCount = 1
+            currentTurn = activeTurn(currentTurn);  //Switch turn
             return;
         }
         currentTurn = activeTurn(currentTurn);  //Switch turn
@@ -196,6 +201,9 @@ const gameController = (() => {
 const displayGame = (() => {
     restartBtn.addEventListener("click", () =>{
         restartGame();
+        if(currentTurn == 1 && AISelection){
+            AIMove()
+        }
     })
     QuitBtn.addEventListener("click", ()=>{
         gameController.resetScore();
@@ -261,7 +269,7 @@ const displayGame = (() => {
             else
                 GUI.insertBefore(winMsg, Player2GUI)
         }
-        if(score === 2){
+        if(score === 5){
             winMsg.textContent = `${playerName} has won the game!!!!`
             winGame = true
         }
@@ -320,10 +328,11 @@ const displayGame = (() => {
         let legalMove = false
         let movePosition; 
         while(!legalMove){
-            movePosition = Math.floor(Math.random() * 8);   
+            movePosition = Math.floor(Math.random() * 9);   //Generate random number 0-8
             if(boardForAI[movePosition].textContent === ""){
                 legalMove = true
             }
+            console.log("MOVE POS: " + movePosition)
         }
         
         console.log("AI MOVE: " + movePosition)
