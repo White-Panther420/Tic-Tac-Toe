@@ -1,0 +1,155 @@
+@font-face
+{
+    font-family: "NeonFont";
+    src: url(./Fonts/Flottflott.ttf);
+}
+
+body
+{
+    margin: 0;
+    font-family: "NeonFont";
+}
+
+.flex{
+    display: flex;
+}
+
+.DifficultyScreen{
+    display: none;
+    flex-direction: column;
+    min-height: 100vh;
+    min-width: 100vw;
+    align-items: center;
+    background-color: black;
+}
+
+/*Give our title that neon sign look*/
+h1 {
+    color: rgb(255, 255, 255);
+    text-align: center;
+    text-shadow:
+        0 0 7px rgb(27, 2, 255),
+        0 0 10px rgb(25, 1, 241),
+        0 0 21px rgb(34, 14, 218),
+        0 0 42px rgb(30, 15, 227),
+        0 0 82px rgb(36, 10, 233),
+        0 0 92px rgb(68, 54, 218),
+        0 0 75px rgb(81, 92, 244),
+        0 0 125px rgb(86, 50, 227);
+    font-size: 96px;
+}
+
+.difficuty_Subheader{
+    color: #fff;
+    margin-top: -60px;
+    text-align: center;
+    text-shadow:
+        0 0 7px rgb(238, 46, 46),
+        0 0 10px rgb(235, 25, 25),
+        0 0 21px rgb(204, 23, 23),
+        0 0 42px rgb(213, 16, 16),
+        0 0 82px rgb(221, 24, 24),
+        0 0 92px rgb(234, 29, 29),
+        0 0 102px rgb(234, 25, 25),
+        0 0 151px rgb(233, 21, 21);
+    font-size: 34px;
+}
+
+.Difficulties{
+    flex-direction: row;
+    max-width: 50%;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    gap: 20px;
+}
+
+.Easy,
+.Medium,
+.Unbeatable{
+    width: 120px;
+    height: 35px;
+    background-color: black;
+    border: white 2px solid;
+    color: #fff;
+    border: none;
+    font-size: 18px;
+    font-family: "NeonFont";
+    text-align: center;
+    align-self: center;
+    justify-self: center;
+}
+
+.Easy{
+    text-shadow:
+    0 0 7px rgb(24, 208, 67),
+    0 0 10px rgb(22, 232, 85),
+    0 0 21px rgb(15, 221, 128),
+    0 0 42px #0fa,
+    0 0 82px #0fa,
+    0 0 92px #0fa,
+    0 0 102px #0fa,
+    0 0 151px #0fa;
+}
+
+.Easy:hover{
+    border: #fff 2px solid;
+    box-shadow:
+        0 0 7px rgb(24, 208, 67),
+        0 0 10px rgb(22, 232, 85),
+        0 0 21px rgb(15, 221, 128),
+        0 0 42px #0fa,
+        0 0 82px #0fa,
+        0 0 92px #0fa,
+        0 0 102px #0fa,
+        0 0 151px #0fa;
+}
+
+.Medium{
+    text-shadow:
+        0 0 7px rgb(218, 194, 13),
+        0 0 10px rgb(230, 212, 19),
+        0 0 21px rgb(215, 184, 12),
+        0 0 42px rgb(222, 169, 11),
+        0 0 82px rgb(226, 211, 13),
+        0 0 92px rgb(228, 207, 13),
+        0 0 102px rgb(225, 190, 15),
+        0 0 151px rgb(224, 196, 14);
+}
+
+.Medium:hover{
+    border: #fff 2px solid;
+    box-shadow: 
+        0 0 7px rgb(218, 194, 13),
+        0 0 10px rgb(230, 212, 19),
+        0 0 21px rgb(215, 184, 12),
+        0 0 42px rgb(222, 169, 11),
+        0 0 82px rgb(226, 211, 13),
+        0 0 92px rgb(228, 207, 13),
+        0 0 102px rgb(225, 190, 15),
+        0 0 151px rgb(224, 196, 14);
+}
+
+.Unbeatable{
+    text-shadow:
+        0 0 7px rgb(238, 46, 46),
+        0 0 10px rgb(235, 25, 25),
+        0 0 21px rgb(204, 23, 23),
+        0 0 42px rgb(213, 16, 16),
+        0 0 82px rgb(221, 24, 24),
+        0 0 92px rgb(234, 29, 29),
+        0 0 102px rgb(234, 25, 25),
+        0 0 151px rgb(233, 21, 21);
+}
+
+.Unbeatable:hover{
+    border: #fff 2px solid;
+    box-shadow: 
+        0 0 7px rgb(238, 46, 46),
+        0 0 10px rgb(235, 25, 25),
+        0 0 21px rgb(204, 23, 23),
+        0 0 42px rgb(213, 16, 16),
+        0 0 82px rgb(221, 24, 24),
+        0 0 92px rgb(234, 29, 29),
+        0 0 102px rgb(234, 25, 25),
+        0 0 151px rgb(233, 21, 21);
+}

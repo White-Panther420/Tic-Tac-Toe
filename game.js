@@ -3,6 +3,7 @@ const player1GUI = document.querySelector(".LeftGUI")
 const AIGUI = document.querySelector(".RightGUI")
 const Player2GUI = document.querySelector(".RightGUIPlayer2")
 const StartScreenContent = document.querySelector(".StartScreenContent")
+const DifficultyScreenContent = document.querySelector(".DifficultyScreen")
 const gameContent = document.querySelector(".GameContent")
 const gameBoardDiv = document.querySelector(".GameBoard")
 const player1Score = document.querySelector(".LeftScore");
@@ -13,8 +14,9 @@ const QuitBtn = document.querySelector(".QuitBtn")
 let AISelection = false; //Used to identify the correct right-side GUI
 let winRound = false;  //Used to stop user from clicking on squares
 let winGame = false;
-let quitGame = false;
 let currentTurn = 0;  //Will keep track of turn
+let AIDifficulty = ""
+let movesCount = 1; //Keep track of moves to later determine a draw
 /******************************Start Screen******************************/
 const Player2Btn = document.querySelector(".vsPlayer")
 Player2Btn.addEventListener("click", ()=>{
@@ -28,17 +30,40 @@ Player2Btn.addEventListener("click", ()=>{
 
 const AIBtn = document.querySelector(".VsAI")
 AIBtn.addEventListener("click", ()=>{
-    restartBtn.style.display = "flex"
     AISelection = true;
+    DifficultyScreenContent.style.display = "flex"
     StartScreenContent.style.display = "none"
+})
+/******************************Start Screen******************************/
+
+/****************************Difficulty Screen***************************/
+const EasyBtn = document.querySelector(".Easy")
+EasyBtn.addEventListener("click", ()=>{
+    startGame()
+    AIDifficulty = "Easy"
+})
+const MediumBtn = document.querySelector(".Medium")
+MediumBtn.addEventListener("click", ()=>{
+    startGame()
+    AIDifficulty = "Medium"
+})
+const UnbeatableBtn = document.querySelector(".Unbeatable")
+UnbeatableBtn.addEventListener("click", ()=>{
+    startGame()
+    AIDifficulty = "Unbeatable"
+})
+const startGame = ()=>{
+    DifficultyScreenContent.style.display = "none"
+    restartBtn.style.display = "flex"
     gameContent.style.display = "flex"
     AIGUI.style.display = "block"
     displayGame.displayBoard();
     if(currentTurn === 1){
-        displayGame.AIMove()
+        gameController.AIMove()
     }
-})
-/******************************Start Screen******************************/
+}
+/****************************Difficulty Screen***************************/
+
 
 /**********************************Game**********************************/
 const gameBoard = (() => {
@@ -87,8 +112,6 @@ const gameController = (() => {
         playerName = "AI"
     }
     const players = [Player("Player 1"), Player(playerName)];
-    let movesCount = 1;
-
     let activeTurn = (currentTurn) =>{
         if(currentTurn === 0)
             return 1; //Player 2 / AI turn
@@ -97,7 +120,6 @@ const gameController = (() => {
     };
 
     const playTurn = (square) => {
-        quitGame = false
         winGame = false
         let squarePosition = square.getAttribute("data-state")
         let row = Math.floor(squarePosition/3)+1;
@@ -117,7 +139,7 @@ const gameController = (() => {
 
         //Update game board
         square.textContent = token
-        board[col-1][row-1] = token 
+        board[row-1][col-1] = token 
         console.log("NUMBER OF MOVES: " + movesCount)
         if(wonRound(board, row, col, token)){
             let currPlayerScore = players[currentTurn].updateScore()  //Store the winner's score
@@ -137,16 +159,147 @@ const gameController = (() => {
             currentTurn = activeTurn(currentTurn);  //Switch turn
             return;
         }
-        currentTurn = activeTurn(currentTurn);  //Switch turn
+
         movesCount++;
+        currentTurn = activeTurn(currentTurn);  //Switch turn
         if(currentTurn === 1 && AISelection){
-            displayGame.AIMove()
+            AIMove()
         }
     }
+
+    const AIMove = ()=>{
+        const boardForAI = document.querySelectorAll(".Square");
+        if(AIDifficulty === "Easy"){
+            let position = easyAIMove(boardForAI)
+            boardForAI[position].click();
+        }
+        else if(AIDifficulty === "Medium"){
+            mediumAIMove(boardForAI)
+        }
+
+    }
+
+    const easyAIMove = (boardForAI)=>{
+        let legalMove = false
+        let movePosition;
+        while(!legalMove){
+            movePosition = Math.floor(Math.random() * 9);   //Generate random number 0-8
+            if(boardForAI[movePosition].textContent === ""){
+                legalMove = true
+            }
+        }
+        return movePosition
+    }
+
+    const mediumAIMove = (boardForAI)=>{
+        let AIToken = players[1].token()
+        let player1Token = players[0].token()
+        let position =  checkAlmostWon(AIToken) //Check if AI is about to win
+        if(position === -1){  //No near win for AI
+            position = checkAlmostWon(player1Token) //Check if player is about to win
+            if(position === -1){  //Neither is about to win so we make a random legal move
+                position = easyAIMove(boardForAI) //Make random legal move
+                boardForAI[position].click();
+            }
+            else{
+                boardForAI[position].click();  //Player is about to win so we move appropriately 
+            }
+        }
+        else{ // AI is about to win so we move appropriately 
+            boardForAI[position].click();
+        }
+    }
+
+    const checkAlmostWon = (token) =>{
+        let col = board.length
+        let row = board[0].length
+        let emptySpot = -1;
+        let tokensFound;
+        //Check for possible horizontal wins
+        for(let i=0; i<col; i++){
+            tokensFound = 0
+            for(let j=0; j<row; j++){
+                if(board[i][j] === token){
+                    tokensFound++
+                }
+                else{
+                    if(board[i][j] !== ""){
+                        emptySpot = -1
+                    }
+                    else{
+                        emptySpot = i * col + j  //Track last empty spot
+                    }
+                }
+            }
+            if(tokensFound === 2){
+                return emptySpot
+            }
+        }
+
+        //Check for possible vertical wins
+        for(let i=0; i<row; i++){
+            tokensFound = 0
+            for(let j=0; j<col; j++){
+                if(board[j][i] === token){
+                    tokensFound++
+                }
+                else{
+                    if(board[j][i] !== ""){
+                        emptySpot = -1
+                    }
+                    else{
+                        emptySpot = j * row + i  //Track last empty spot
+                    }
+                }
+            }
+            if(tokensFound === 2){
+                return emptySpot
+            }
+        }
+
+        //Check for possible diagonal wins       
+        for(let i=0; i<col; i++){
+            if(board[i][i] === token){
+                tokensFound++
+            }
+            else{
+                if(board[i][i] !== ""){
+                    emptySpot = -1
+                }
+                else{
+                    emptySpot = i * row + i  //Track last empty spot
+                }
+            }
+        }
+        if(tokensFound === 2){
+            return emptySpot
+        }
+
+        // for(let i=0; i<3; i++){
+        //     if(board[i][(3-1)-i] === token){
+        //         tokensFound++
+        //     }
+        //     else{
+        //         if(board[i][(3-1)-i] !== ""){
+        //             emptySpot = -1
+        //         }
+        //         else{
+        //             emptySpot = j * row + i  //Track last empty spot
+        //         }
+        //     }
+        // }
+        if(tokensFound !== 2){
+            return emptySpot = -1
+        }
+        else{
+            return emptySpot
+        }
+    }
+
     const wonRound = (board, row, col, token) => {
         //checking for horizontal win
         for(let i=0; i<3; i++){
-            if(board[i][row-1] !== token){
+            if(board[i][col-1] !== token){
                 break; //We don't have three of the same tokens in a row
             }
             if(i === 2){
@@ -156,7 +309,7 @@ const gameController = (() => {
         }
         //Checking for vertical win
         for(let j=0; j<3; j++){
-            if(board[col-1][j] !== token){
+            if(board[row-1][j] !== token){
                 break; //We don't have three of the same tokens in a row
             }
             if(j === 2){
@@ -165,7 +318,7 @@ const gameController = (() => {
             }
         }
         //Checking for diagonal win
-        if(row-1 === col-1){
+        if(col-1 === row-1){
             for(let i=0; i<3; i++){
                 if(board[i][i] !== token){
                     break; //We don't have three of the same tokens in a row
@@ -178,7 +331,7 @@ const gameController = (() => {
         }
 
         //Checking for reverse diagonal win
-        if((row-1) + (col-1) === 2){
+        if((col-1) + (row-1) === 2){
             for(let i=0; i<3; i++){
                 if(board[i][(3-1)-i] !== token){
                     break; //We don't have three of the same tokens in a row
@@ -195,14 +348,14 @@ const gameController = (() => {
         players[1].clearScore();
     }
 
-    return{playTurn, resetScore};
+    return{playTurn, AIMove, resetScore};
 })();
 
 const displayGame = (() => {
     restartBtn.addEventListener("click", () =>{
         restartGame();
         if(currentTurn == 1 && AISelection){
-            AIMove()
+            gameController.AIMove()
         }
     })
     QuitBtn.addEventListener("click", ()=>{
@@ -286,7 +439,7 @@ const displayGame = (() => {
     }
 
     const endGame = ()=>{
-        quitGame = true;
+        movesCount = 1;
         gameContent.style.display = "none"
         const winMsgElement = document.querySelector(".win_p")
         const drawMsgElement = document.querySelector(".draw_p")
@@ -309,6 +462,7 @@ const displayGame = (() => {
     }
 
     const restartGame = () =>{
+        movesCount = 1;
         gameBoardDiv.textContent = "";
         const winMsgElement = document.querySelector(".win_p")
         const drawMsgElement = document.querySelector(".draw_p")
@@ -323,23 +477,7 @@ const displayGame = (() => {
         restartBtn.style.display = "none"
     }
 
-    const AIMove = ()=>{
-        const boardForAI = document.querySelectorAll(".Square");
-        let legalMove = false
-        let movePosition; 
-        while(!legalMove){
-            movePosition = Math.floor(Math.random() * 9);   //Generate random number 0-8
-            if(boardForAI[movePosition].textContent === ""){
-                legalMove = true
-            }
-            console.log("MOVE POS: " + movePosition)
-        }
-        
-        console.log("AI MOVE: " + movePosition)
-        boardForAI[movePosition].click();
-    }
-
-    return{displayBoard, updateScoreGUI, printWinMsg, printDrawMSG, removeRestartOption, AIMove}
+    return{displayBoard, updateScoreGUI, printWinMsg, printDrawMSG, removeRestartOption}
 })();
 
 
