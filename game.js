@@ -231,7 +231,7 @@ const gameController = (() => {
                     }
                 }
             }
-            if(tokensFound === 2){
+            if(tokensFound === 2 && emptySpot != -1){
                 return emptySpot
             }
         }
@@ -252,12 +252,13 @@ const gameController = (() => {
                     }
                 }
             }
-            if(tokensFound === 2){
+            if(tokensFound === 2 && emptySpot != -1){
                 return emptySpot
             }
         }
-
+        
         //Check for possible diagonal wins       
+        tokensFound = 0;
         for(let i=0; i<col; i++){
             if(board[i][i] === token){
                 tokensFound++
@@ -271,23 +272,25 @@ const gameController = (() => {
                 }
             }
         }
-        if(tokensFound === 2){
+        if(tokensFound === 2 && emptySpot != -1){
             return emptySpot
         }
 
-        // for(let i=0; i<3; i++){
-        //     if(board[i][(3-1)-i] === token){
-        //         tokensFound++
-        //     }
-        //     else{
-        //         if(board[i][(3-1)-i] !== ""){
-        //             emptySpot = -1
-        //         }
-        //         else{
-        //             emptySpot = j * row + i  //Track last empty spot
-        //         }
-        //     }
-        // }
+        //Check for possible reverse diagonal wins       
+        tokensFound = 0;
+        for(let i=0; i<3; i++){
+            if(board[i][(3-1)-i] === token){
+                tokensFound++
+            }
+            else{
+                if(board[i][(3-1)-i] !== ""){
+                    emptySpot = -1
+                }
+                else{
+                    emptySpot = i * row + ((3-1)-i)  //Track last empty spot
+                }
+            }
+        }
         if(tokensFound !== 2){
             return emptySpot = -1
         }
