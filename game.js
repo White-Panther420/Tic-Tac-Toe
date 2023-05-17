@@ -141,7 +141,7 @@ const gameController = (() => {
         square.textContent = token
         board[row-1][col-1] = token 
         console.log("NUMBER OF MOVES: " + movesCount)
-        if(wonRound(board, row, col, token)){
+        if(wonRound(board, row, col, token) != null){
             let currPlayerScore = players[currentTurn].updateScore()  //Store the winner's score
             displayGame.updateScoreGUI(token, currPlayerScore)
             displayGame.printWinMsg(token, currPlayerScore)
@@ -175,6 +175,9 @@ const gameController = (() => {
         }
         else if(AIDifficulty === "Medium"){
             mediumAIMove(boardForAI)
+        }
+        else{
+            bestMove(boardForAI)
         }
 
     }
@@ -210,6 +213,79 @@ const gameController = (() => {
         }
     }
 
+    const bestMove = (boardForAI)=>{
+        const board = gameBoard.getBoard()
+        let move
+        let optimalScore = -Infinity;
+        let AIToken = players[1].token()
+        for(let i=0; i<3; i++){
+            for(let j=0; j<3; j++){
+                if(board[i][j] === ""){
+                    board[i][j] = AIToken
+                    let moveScore = miniMax(board, 0, false, i, j)
+                    board[i][j] = ""  //Undo move so we don't affect the board
+                    console.log("THE MOVESCORE: " + moveScore)
+                    if(moveScore > optimalScore){
+                        optimalScore = moveScore
+                        move = i * 3 + j
+                    }
+                }
+            }
+        }
+        console.log("MOVE: " + move)
+        boardForAI[move].click()
+    }
+
+    let miniMaxScores = {
+        "X": 1,
+        "O": -1,
+        "tie": 0
+    }
+    const miniMax = (board, depth, isMaximizing, rowPos, colPos)=>{
+        console.log("COL: " + colPos + ", ROW: " + rowPos)
+        let player1Token = players[0].token()
+        let AIToken = players[1].token()
+        let result = wonRound(board, rowPos+1, colPos+1, players[currentTurn].token())
+        console.log("RESULT: " + result)
+        if(result != null){
+            console.log("MINIMAXSCORE: " + miniMaxScores[result])
+            return miniMaxScores[result]
+        }
+
+        if(isMaximizing){
+            let optimalScore = -Infinity
+            for(let i=0; i<3; i++){
+                for(let j=0; j<3; j++){
+                    if(board[i][j] === ""){
+                        board[i][j] = AIToken
+                        let score = miniMax(board, depth+1, false, i, j)
+                        board[i][j] = ""
+                        if(score > optimalScore){
+                            optimalScore = score
+                        }
+                        //optimalScore = max(score, optimalScore)
+                    }
+                }
+            }  
+            return optimalScore
+        }
+        else{
+            let optimalScore = Infinity
+            for(let i=0; i<3; i++){
+                for(let j=0; j<3; j++){
+                    if(board[i][j] === ""){
+                        board[i][j] = player1Token
+                        let score = miniMax(board, depth+1, true, i, j)
+                        board[i][j] = ""
+                        if(score < optimalScore){
+                            optimalScore = score
+                        }       
+                    }             
+                }
+            }  
+            return optimalScore
+        }
+    }
     const checkAlmostWon = (token) =>{
         let col = board.length
         let row = board[0].length
@@ -306,8 +382,8 @@ const gameController = (() => {
                 break; //We don't have three of the same tokens in a row
             }
             if(i === 2){
-                console.log(board)
-                return true;
+                console.log("WINNING TOKEN!: " + token)
+                return token;
             }
         }
         //Checking for vertical win
@@ -316,8 +392,8 @@ const gameController = (() => {
                 break; //We don't have three of the same tokens in a row
             }
             if(j === 2){
-                console.log(board)
-                return true;
+                console.log("WINNING TOKEN!: " + token)
+                return token;
             }
         }
         //Checking for diagonal win
@@ -327,8 +403,8 @@ const gameController = (() => {
                     break; //We don't have three of the same tokens in a row
                 }
                 if(i === 2){
-                    console.log(board)
-                    return true;
+                    console.log("WINNING TOKEN!: " + token)
+                    return token;
                 }
             }
         }
@@ -340,10 +416,16 @@ const gameController = (() => {
                     break; //We don't have three of the same tokens in a row
                 }
                 if(i === 2){
-                    return true;
+                    console.log("WINNING TOKEN!: " + token)
+                    return token;
                 }
             }
         }
+        if(movesCount === 9){
+            console.log("A TIE!")
+            return "tie"
+        }
+        return null
     }
     
     const resetScore = ()=>{  //Allows quitBtn to also reset score on backend. Not just GUI
