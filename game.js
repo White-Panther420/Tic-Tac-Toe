@@ -100,7 +100,7 @@ const Player = (name) => {
     const clearScore = () =>{
         return score = 0;
     }
-    return{name, token, updateScore, clearScore, getName}
+    return{token, updateScore, clearScore, getName}
 };
 
 const gameController = (() => {
@@ -141,7 +141,7 @@ const gameController = (() => {
         //Update game board
         square.textContent = token
         board[row-1][col-1] = token 
-        let roundResult = wonRound(token)
+        let roundResult = wonRound()
         if(roundResult != null ){
             if(roundResult === "tie"){
                 displayGame.printDrawMSG()
@@ -205,7 +205,7 @@ const gameController = (() => {
                 position = easyAIMove(boardForAI) //Make random legal move
                 boardForAI[position].click();
             }
-            else{
+            else{  //Player is about to win
                 if(showMercy()){
                     position = easyAIMove(boardForAI) //Make random legal move
                 }
@@ -259,7 +259,7 @@ const gameController = (() => {
     const miniMax = (board, depth, isMaximizing, rowPos, colPos)=>{
         let player1Token = players[0].token()
         let AIToken = players[1].token()
-        let result = wonRound(players[currentTurn].token())
+        let result = wonRound()
         if(result != null){
             return miniMaxScores[result]
         }
@@ -387,7 +387,7 @@ const gameController = (() => {
         }
     }
 
-    const wonRound = (token) => {
+    const wonRound = () => {
         const board = gameBoard.getBoard()
         //Check for horizontal wins
         for(let i=0; i<3; i++){
