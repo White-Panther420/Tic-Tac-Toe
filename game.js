@@ -57,8 +57,9 @@ const startGame = ()=>{
     restartBtn.style.display = "flex"
     gameContent.style.display = "flex"
     AIGUI.style.display = "block"
-    displayGame.displayBoard();
-    if(currentTurn === 1){
+    displayGame.displayBoard()
+    if(AISelection){
+        currentTurn = 1
         gameController.AIMove()
     }
 }
@@ -67,7 +68,7 @@ const startGame = ()=>{
 
 /**********************************Game**********************************/
 const gameBoard = (() => {
-    const board = [] // [['X', 'O', 'X'], ['X', 'O', 'X'], ['X', 'O', 'X']];
+    const board = [] 
     //Creating a 3x3 board
     const createNewBoard =  () => {
         for(let i=0; i<3; i++){
@@ -99,7 +100,7 @@ const Player = (name) => {
     const clearScore = () =>{
         return score = 0;
     }
-    return{name, token, updateScore, clearScore}
+    return{name, token, updateScore, clearScore, getName}
 };
 
 const gameController = (() => {
@@ -140,26 +141,27 @@ const gameController = (() => {
         //Update game board
         square.textContent = token
         board[row-1][col-1] = token 
-        console.log("NUMBER OF MOVES: " + movesCount)
-        if(wonRound(board, row, col, token) != null){
-            let currPlayerScore = players[currentTurn].updateScore()  //Store the winner's score
-            displayGame.updateScoreGUI(token, currPlayerScore)
-            displayGame.printWinMsg(token, currPlayerScore)
-            winRound = true
-            movesCount = 1
-            if(winGame){
-                displayGame.removeRestartOption()
+        let roundResult = wonRound(token)
+        if(roundResult != null ){
+            if(roundResult === "tie"){
+                displayGame.printDrawMSG()
+                movesCount = 1
+                currentTurn = activeTurn(currentTurn);  //Switch turn
+                return;
             }
-            currentTurn = activeTurn(currentTurn);  //Switch turn
-            return;
+            else{
+                let currPlayerScore = players[currentTurn].updateScore()  //Store the winner's score
+                displayGame.updateScoreGUI(token, currPlayerScore)
+                displayGame.printWinMsg(token, currPlayerScore)
+                winRound = true
+                movesCount = 1
+                if(winGame){
+                    displayGame.removeRestartOption()
+                }
+                currentTurn = activeTurn(currentTurn);  //Switch turn
+                return;
+            }
         }
-        if(movesCount === 9){
-            displayGame.printDrawMSG()
-            movesCount = 1
-            currentTurn = activeTurn(currentTurn);  //Switch turn
-            return;
-        }
-
         movesCount++;
         currentTurn = activeTurn(currentTurn);  //Switch turn
         if(currentTurn === 1 && AISelection){
@@ -179,7 +181,6 @@ const gameController = (() => {
         else{
             bestMove(boardForAI)
         }
-
     }
 
     const easyAIMove = (boardForAI)=>{
@@ -205,14 +206,30 @@ const gameController = (() => {
                 boardForAI[position].click();
             }
             else{
+                if(showMercy()){
+                    position = easyAIMove(boardForAI) //Make random legal move
+                }
                 boardForAI[position].click();  //Player is about to win so we move appropriately 
             }
         }
         else{ // AI is about to win so we move appropriately 
+            //First we decide if we want to win or give the player a chance then play accordingly
+            if(showMercy()){
+                position = easyAIMove(boardForAI) //Make random legal move
+            }
             boardForAI[position].click();
         }
     }
 
+    const showMercy = ()=>{
+        let winDecision = Math.floor(Math.random() * 100) + 1;  
+        if(winDecision > 25){
+            return false;
+        }
+        else{
+            return true
+        }
+    }
     const bestMove = (boardForAI)=>{
         const board = gameBoard.getBoard()
         let move
@@ -224,7 +241,6 @@ const gameController = (() => {
                     board[i][j] = AIToken
                     let moveScore = miniMax(board, 0, false, i, j)
                     board[i][j] = ""  //Undo move so we don't affect the board
-                    console.log("THE MOVESCORE: " + moveScore)
                     if(moveScore > optimalScore){
                         optimalScore = moveScore
                         move = i * 3 + j
@@ -232,23 +248,19 @@ const gameController = (() => {
                 }
             }
         }
-        console.log("MOVE: " + move)
         boardForAI[move].click()
     }
 
     let miniMaxScores = {
-        "X": 1,
-        "O": -1,
+        "X": -20,
+        "O": 10,
         "tie": 0
     }
     const miniMax = (board, depth, isMaximizing, rowPos, colPos)=>{
-        console.log("COL: " + colPos + ", ROW: " + rowPos)
         let player1Token = players[0].token()
         let AIToken = players[1].token()
-        let result = wonRound(board, rowPos+1, colPos+1, players[currentTurn].token())
-        console.log("RESULT: " + result)
+        let result = wonRound(players[currentTurn].token())
         if(result != null){
-            console.log("MINIMAXSCORE: " + miniMaxScores[result])
             return miniMaxScores[result]
         }
 
@@ -375,57 +387,35 @@ const gameController = (() => {
         }
     }
 
-    const wonRound = (board, row, col, token) => {
-        //checking for horizontal win
+    const wonRound = (token) => {
+        const board = gameBoard.getBoard()
+        //Check for horizontal wins
         for(let i=0; i<3; i++){
-            if(board[i][col-1] !== token){
-                break; //We don't have three of the same tokens in a row
-            }
-            if(i === 2){
-                console.log("WINNING TOKEN!: " + token)
-                return token;
-            }
-        }
-        //Checking for vertical win
-        for(let j=0; j<3; j++){
-            if(board[row-1][j] !== token){
-                break; //We don't have three of the same tokens in a row
-            }
-            if(j === 2){
-                console.log("WINNING TOKEN!: " + token)
-                return token;
-            }
-        }
-        //Checking for diagonal win
-        if(col-1 === row-1){
-            for(let i=0; i<3; i++){
-                if(board[i][i] !== token){
-                    break; //We don't have three of the same tokens in a row
-                }
-                if(i === 2){
-                    console.log("WINNING TOKEN!: " + token)
-                    return token;
-                }
+            if(equals3(board[i][0], board[i][1], board[i][2])){
+                return board[i][0]
             }
         }
 
-        //Checking for reverse diagonal win
-        if((col-1) + (row-1) === 2){
-            for(let i=0; i<3; i++){
-                if(board[i][(3-1)-i] !== token){
-                    break; //We don't have three of the same tokens in a row
-                }
-                if(i === 2){
-                    console.log("WINNING TOKEN!: " + token)
-                    return token;
-                }
+        //Check for vertical wins
+        for(let i=0; i<3; i++){
+            if(equals3(board[0][i], board[1][i], board[2][i])){
+                return board[0][i]
             }
         }
+
+        //Check for diagonal wins       
+        if(equals3(board[0][0], board[1][1], board[2][2])){
+            return board[0][0]
+        }
+
+        if(equals3(board[0][2], board[1][1], board[2][0])){
+            return board[0][2]
+        }
+
         if(movesCount === 9){
-            console.log("A TIE!")
             return "tie"
         }
-        return null
+        return null  //no winner yet
     }
     
     const resetScore = ()=>{  //Allows quitBtn to also reset score on backend. Not just GUI
@@ -433,13 +423,25 @@ const gameController = (() => {
         players[1].clearScore();
     }
 
+    const equals3 = (str1, str2, str3) =>{
+        if(str1 === "" || str2 == "" || str3 === ""){
+            return false
+        }
+        else if(str1 === str2 && str2 === str3){
+            return true
+        }
+        else{
+            return false
+        }
+    }
     return{playTurn, AIMove, resetScore};
 })();
 
 const displayGame = (() => {
     restartBtn.addEventListener("click", () =>{
         restartGame();
-        if(currentTurn == 1 && AISelection){
+        if(AISelection){
+            currentTurn = 1 
             gameController.AIMove()
         }
     })
@@ -466,9 +468,8 @@ const displayGame = (() => {
                     square.removeEventListener("click", func)
                 }
                 else if(square.textContent !== ""){
-                    //Flash red, illegal move
-                    square.setAttribute("style", "background-color: red; color: white; border: none; width:100px; height:100px;");
-                    console.log("ILLEGAL MOVE");
+                    square.classList.add("illegalMove")
+                    setTimeout(modifySquare, 1500, square)
                 }
                 else{
                     gameController.playTurn(square)
@@ -476,6 +477,12 @@ const displayGame = (() => {
             }
         }
     }
+
+    //Remove illegal move animation
+    const modifySquare = (square)=>{
+        square.classList.remove("illegalMove")
+    }
+
     const updateScoreGUI = (token, score) =>{
         if(token === 'X'){
             player1Score.textContent = score;

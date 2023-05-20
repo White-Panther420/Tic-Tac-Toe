@@ -321,3 +321,17 @@ h1 {
         0 0 151px rgb(233, 21, 152);
     font-size: 30px;
 }
+  
+.illegalMove {
+    animation: blinker 0.5s linear 3;
+}
+
+.paused {
+    animation-play-state: paused;
+  }
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
